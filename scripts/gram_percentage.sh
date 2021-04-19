@@ -13,6 +13,8 @@ print_gram_percentage() {
     loads=$(cached_eval nvidia-smi | sed -nr 's/.*\s([0-9]+)MiB\s*\/\s*([0-9]+)MiB.*/\1 \2/p')
   elif command_exists "cuda-smi"; then
     loads=$(cached_eval cuda-smi | sed -nr 's/.*\s([0-9.]+) of ([0-9.]+) MB.*/\1 \2/p' | awk '{print $2-$1" "$2}')
+  elif command_exists "rocm-smi"; then
+    echo $(cached_eval rocm-smi | sed -nr '6p' | awk '{ print $9 }')
   else
     echo "No GPU"
     return
